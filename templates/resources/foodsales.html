@@ -1,0 +1,52 @@
+
+{% extends "layouts/base.html"%}
+{% load static %}
+{% block messages %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{message.tags}}" role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <span class="sr-only">Info</span>
+            <div>{{ message }}</div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+{% endblock messages %}
+{% block content %}
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold mb-4 dark:text-white text-center">Food Orders</h1>
+    <form method="POST" class="max-w-lg mx-auto">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render form fields as paragraphs -->
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Submit</button>
+    </form>
+</div>
+
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-4 dark:text-white">Food Sales</h1>
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Food</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Sold</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+            {% for foodsale in foodsales %}
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ foodsale.food }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ foodsale.unit_sold }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ foodsale.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

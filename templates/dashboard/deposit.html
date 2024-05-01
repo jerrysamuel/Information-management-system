@@ -1,0 +1,132 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block messages %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{message.tags}}" role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <span class="sr-only">Info</span>
+            <div>{{ message }}</div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+{% endblock messages %}
+
+{% block content %}
+
+  <div class="items-center p-8 lg:mx-auto ">
+      <div class="min-h-screen mt-6 justify-center p-3">
+        <form method= "post">
+          {% csrf_token %}
+            <div class="w-full p-8 max-w-sm text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+              <div class="mb-4">
+                <label for="amount" class="block text-xl text-gray-700 dark:text-gray-400">Amount in $:</label>
+                <input required type="number" id="amount" min="500" step="100" name="amount" class="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:placeholder-gray-500 dark:border-gray-600 dark:focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:ring-opacity-50">
+              </div>
+              <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">Bitcoin Deposit</h5>
+                
+                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">BTC deposit wallet address:</p>
+                
+                        <button id="copyAddress" class="text-blue-500 hover:underline focus:outline-none">
+                            <ul class="my-4 space-y-3">
+                                <li>
+                                <div class="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
+                                  <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M10 6H15C16.6569 6 18 7.34315 18 9C18 10.6569 16.6569 12 15 12M10 6V12M10 6H7M10 6V3M15 12H10M15 12C16.6569 12 18 13.3431 18 15C18 16.6569 16.6569 18 15 18H10M10 12V18M10 18H7M10 18V21M13 6V3M13 21V18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                                <span class="font-mono nowrap flex-1 text-green-500 break-all mb-6">{{  wallet_settings.btc_deposit_wallet }}</span>
+                                </div>
+                                <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">click to copy</p>
+                                </li>
+                                <li> <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a2 2 0 0 0-1 .3V5c0-1.1.9-2 2-2h7Z" clip-rule="evenodd"/>
+                                    <path fill-rule="evenodd" d="M8 7v4H4.2c0-.2.2-.3.3-.4l2.4-2.9A2 2 0 0 1 8 7.1Zm2 0v4a2 2 0 0 1-2 2H4v6c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+                                  </svg></li>
+                            </ul>
+                          
+                              
+                              </button>
+                              <br>
+                              <br>
+                              <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">USDT Deposit</h5>
+                        <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">Your USDT wallet address:</p>
+                        
+                                <button id="copyAddress" class="text-blue-500 hover:underline focus:outline-none">
+                                    <ul class="my-4 space-y-3">
+                                        <li>
+                                        <div class="flex items-center p-3 text-base font-bold text-gray-900 rounded-lg bg-gray-50 hover:bg-gray-100 group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
+                                          <svg width="40px" height="40px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g fill="none" fill-rule="evenodd"> <circle cx="16" cy="16" r="16" fill="#26A17B"></circle> <path fill="#FFF" d="M17.922 17.383v-.002c-.11.008-.677.042-1.942.042-1.01 0-1.721-.03-1.971-.042v.003c-3.888-.171-6.79-.848-6.79-1.658 0-.809 2.902-1.486 6.79-1.66v2.644c.254.018.982.061 1.988.061 1.207 0 1.812-.05 1.925-.06v-2.643c3.88.173 6.775.85 6.775 1.658 0 .81-2.895 1.485-6.775 1.657m0-3.59v-2.366h5.414V7.819H8.595v3.608h5.414v2.365c-4.4.202-7.709 1.074-7.709 2.118 0 1.044 3.309 1.915 7.709 2.118v7.582h3.913v-7.584c4.393-.202 7.694-1.073 7.694-2.116 0-1.043-3.301-1.914-7.694-2.117"></path> </g> </g></svg>
+                                        <span class="font-mono mx-auto flex-1 text-green-500 break-all mb-6">{{  wallet_settings.usdt_deposit_wallet }}</span>
+                                        </div>
+                                        <p class="mb-5 text-base text-gray-500 sm:text-lg dark:text-gray-400">click to copy</p>
+                                        </li>
+                                        <li> <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M18 3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1V9a4 4 0 0 0-4-4h-3a2 2 0 0 0-1 .3V5c0-1.1.9-2 2-2h7Z" clip-rule="evenodd"/>
+                                            <path fill-rule="evenodd" d="M8 7v4H4.2c0-.2.2-.3.3-.4l2.4-2.9A2 2 0 0 1 8 7.1Zm2 0v4a2 2 0 0 1-2 2H4v6c0 1.1.9 2 2 2h7a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd"/>
+                                          </svg></li>
+                                    </ul>
+                                  
+                                      
+                                      </button>
+                                </div>
+                        </div>
+                        
+
+                        <div class="text-sm text-gray-500 mt-4">
+                          <p>Please use the above wallet addresses for your deposits.</p>
+                          <p class= "mb-5 text-red-600">Important: Ensure you double-check the wallet address before making a deposit.</p>
+                          <p class="mb-4">Once deposit is complete click the button below to verify deposit </p>
+                      </div>
+                      <div class= "items-center">
+                        <button type = "submit" name ="button" class="inline-flex items-center text-purple-600 justify-center w-full px-5 py-3 mb-2 mr-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:w-auto focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                          I have sent it
+                        </button>
+                      </div>
+                      
+
+                </div>
+            </div>
+          </form>
+      </div>
+  </div>
+
+
+
+  <!-- <div class="container mx-auto mt-8 p-8 bg-white rounded-md shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">Bitcoin Deposit</h2>
+
+    <div class="flex items-center space-x-2 mb-4">
+        <div>
+
+        </div>
+      <p class="text-gray-600">Your deposit wallet address:</p>
+      <p class="font-mono text-blue-500">{{  wallet_settings.default_deposit_wallet }}</p>
+      <button id="copyAddress" class="text-blue-500 hover:underline focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+        </svg>
+      </button>
+    </div> -->
+
+    <!-- <p class="text-gray-600 mb-6">Please use the above wallet address for your deposits.</p>
+
+    <p class="text-gray-600">Important: Ensure you double-check the wallet address before making a deposit.</p>
+  </div> -->
+
+  <script>
+    // Copy address to clipboard
+    document.getElementById('copyAddress').addEventListener('click', function() {
+      var addressElement = document.querySelector('.font-mono');
+      var tempInput = document.createElement('input');
+      tempInput.value = addressElement.textContent;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert('Wallet address copied to clipboard!');
+    });
+  </script>
+{% endblock %}

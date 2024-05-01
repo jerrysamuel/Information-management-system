@@ -1,0 +1,37 @@
+{% extends "layouts/base.html"%}
+{% load static %}
+{% block messages %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{message.tags}}" role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+            </svg>
+            <span class="sr-only">Info</span>
+            <div>{{ message }}</div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+{% endblock messages %}
+{% block content %}
+
+<div class="container mx-auto">
+    <h1 class="dark:text-white text-3xl font-bold mb-4">My Employees</h1>
+    <div class="grid grid-cols-3 gap-4">
+        {% for humanresource in Humanresources %}
+            <div class="p-4 border rounded-lg shadow-md">
+                {% comment %} <!-- <img src="{{humanresource.image.url}}", alt="employee image"> --> {% endcomment %}
+                <h2 class="dark:text-white text-lg font-semibold">Name: {{ humanresource.name }}</h2>
+                <p class="dark:text-white text-sm text-gray-600">Gender: {{ humanresource.gender }}</p>
+                <p class="text-sm dark:text-white text-gray-600">Age:{{ humanresource.age }}</p>
+                <p class="text-sm dark:text-white text-gray-600">Salary: &#8358;{{ humanresource.salary }}</p>
+                <p class="text-sm dark:text-white text-gray-600">Date Hired: {{ humanresource.hire_date }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
