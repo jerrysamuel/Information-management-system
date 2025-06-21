@@ -1,6 +1,7 @@
 from functools import wraps
 from django.shortcuts import redirect
 
+
 def admin_required(view_func):
     @wraps(view_func)
     def wrapper(request, *args, **kwargs):
@@ -8,7 +9,7 @@ def admin_required(view_func):
             return view_func(request, *args, **kwargs)
         else:
             # Redirect to a different page or raise PermissionDenied
-            return redirect('access_denied')  # You need to define this URL
+            return redirect("customer_dashboard")  # You need to define this URL
     return wrapper
 
 def customer_required(view_func):
@@ -18,7 +19,7 @@ def customer_required(view_func):
             return view_func(request, *args, **kwargs)
         else:
             # Redirect to a different page or raise PermissionDenied
-            return redirect('access_denied')  # You need to define this URL
+            return redirect("customer_dashboard")  # You need to define this URL
     return wrapper
 
 def waiter_required(view_func):
@@ -28,5 +29,5 @@ def waiter_required(view_func):
             return view_func(request, *args, **kwargs)
         else:
             # Redirect to a different page or raise PermissionDenied
-            return redirect('access_denied')  # You need to define this URL
+            return redirect("customer_dashboard")  # You need to define this URL
     return wrapper

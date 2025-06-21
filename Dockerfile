@@ -1,4 +1,4 @@
-FROM python:3.11.5
+FROM python:3.11.5-slim
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -24,14 +24,13 @@ RUN set -uex; \
     apt-get update; \
     apt-get install nodejs -y;
 
-# Install modules and webpack
+# Install modules and webpack   
 RUN npm i
 RUN npm run build
 
 # Manage Assets & DB 
 RUN python manage.py collectstatic --no-input 
-RUN python manage.py makemigrations
-RUN python manage.py migrate
+
 
 # gunicorn
 CMD ["gunicorn", "--config", "gunicorn-cfg.py", "core.wsgi"]

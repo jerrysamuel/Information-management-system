@@ -53,12 +53,17 @@ def dashboard(request):
 
     
     # Calculate the percentages
-    total_staff = male_count + female_count
-    male_percentage = round((male_count / total_staff) * 100, 2)
-    female_percentage = round((female_count / total_staff) * 100, 2)
-
+    
+    total_staff = (male_count + female_count) 
+    if total_staff > 0:
+      male_percentage = round((male_count / total_staff) * 100, 2) 
+      female_percentage = round((female_count / total_staff) * 100, 2) 
     # Prepare the data for plotting
-    genders = ['Male', 'Female']
+      
+    else:
+      male_percentage = 0
+      female_percentage = 0
+    
     percentages = [male_percentage, female_percentage]
     staff_counts = Humanresource.objects.values('humancategory').annotate(count=Count('id'))
 
@@ -76,7 +81,7 @@ def dashboard(request):
     # Prepare the data for plotting
     dates = json.dumps([entry['date'].strftime('%Y-%m-%d') for entry in data])
     units_sold = json.dumps([entry['total_units_sold'] for entry in data])
-
+    genders = ['Male', 'Female']
     context = {
        'total_menu':total_menu,
         'human_resource_count': human_resource_count,

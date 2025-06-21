@@ -1,7 +1,10 @@
-version: '3.8'
+
 services:
-  rocket-django:
-    container_name: rocket_django
+  ims:
+    container_name: ims
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn --config gunicorn-cfg.py core.wsgi"
     restart: always
     build: .
     networks:
@@ -12,13 +15,13 @@ services:
     restart: always
     image: "nginx:latest"
     ports:
-      - "5085:5085"
+      - "5085:80"
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks:
       - web_network
     depends_on: 
-      - rocket-django
+      - ims
 networks:
   db_network:
     driver: bridge
