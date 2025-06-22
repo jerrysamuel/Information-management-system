@@ -279,13 +279,13 @@ MESSAGE_TAGS = {
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Sunshine Furnitures",
+    "site_title": "Information Management System",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Sunshine Furnitures",
+    "site_header": "Information Management System",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Sunshine Furnitures",
+    "site_brand": "Information Management System",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "img/Untitled.png",
@@ -301,10 +301,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome back to Sunshine Furnitures admin",
+    "welcome_sign": "Welcome back to Information Management System admin",
 
     # Copyright on the footer
-    "copyright": "SunshineFurnitures",
+    "copyright": "Information-Management-System",
 
     # List of model admins to search from the search bar, search bar omitted if excluded
     # If you want to use a single search field you dont need to use a list, you can use a simple string 

@@ -97,128 +97,17 @@
     <h1 class="text-xl text-center dark:text-white">Resource category Percentages</h1>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // Retrieve the categories and worth percentages from the template context
-    const categories = JSON.parse("{{ categories|escapejs }}");
-    const worthPercentages = JSON.parse("{{ worth_percentages|escapejs }}");
-
-    // Function to calculate the data labels for the pie chart
-    const getDataLabels = () => {
-      return worthPercentages.map((percentage) => percentage + "%");
-    };
-
-    // Options for the pie chart
-    const options = {
-      series: worthPercentages,
-      labels: categories,
-      colors: ["#1C64F2", "#16BDCA", "#9061F9", "#FDBA8C", "#FF5C5C", "#2DCE89", "#FFA500", "#FF5733", "#006400", "#800080"], // Add more colors if needed
-      chart: {
-        height: 420,
-        width: "100%",
-        type: "pie",
-      },
-      stroke: {
-        colors: ["white"],
-        lineCap: "",
-      },
-      plotOptions: {
-        pie: {
-          size: "100%",
-          dataLabels: {
-            offset: -25,
-            formatter: function (value, { seriesIndex, dataPointIndex, w }) {
-              return getDataLabels()[dataPointIndex];
-            }
-          }
-        },
-      },
-      legend: {
-        position: "bottom",
-        fontFamily: "Inter, sans-serif",
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontFamily: "Inter, sans-serif",
-        },
-      },
-    };
-
-    // Render the pie chart using ApexCharts
-    const chart = new ApexCharts(document.getElementById("pie-chart"), options);
-    chart.render();
-  });
-</script>
+<script defer src="{% static 'vendor/js/dashboard.js' %}"></script>
 <div class="mb-10 grid grid-cols-2 gap-2">
     <div id="gender-chart" class="w-full mt-4">
         <h1 class="text-xl dark:text-white text-center">(Gender) Staff Charts</h1>
     </div>
     
-    <script>
-        // Get the gender data from the context passed by Django
-        const genders = {{ genders|safe }};
-        const percentages = {{ percentages|safe }};
-    
-        // Prepare the chart options
-        const chartOptions = {
-            series: percentages,
-            labels: genders,
-            chart: {
-                type: 'donut',
-                height: 320,
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '70%',
-                    }
-                }
-            },
-            legend: {
-                position: 'bottom',
-            },
-        };
-    
-        // Render the chart
-        if (document.getElementById("gender-chart") && typeof ApexCharts !== 'undefined') {
-            const chart = new ApexCharts(document.getElementById("gender-chart"), chartOptions);
-            chart.render();
-        }
-    </script>
+    <script defer src="{% static 'vendor/js/dashboard.js' %}"></script>
     <div id="staff-chart" class="w-full mt-4">
         <h1 class="text-xl dark:text-white text-center"> Staff Category Charts</h1>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Retrieve the categories and counts from the Django template context
-            const labels = JSON.parse("{{ labels|escapejs }}");
-            const counts = JSON.parse("{{ counts|escapejs }}");
-            // Prepare the chart options
-            const options = {
-                series: counts,
-                labels: labels,
-                chart: {
-                    type: 'pie',
-                    height: 320,
-                },
-                plotOptions: {
-                    pie: {
-                        size: '70%',
-                    }
-                },
-                legend: {
-                    position: 'bottom',
-                },
-            };
-    
-            // Render the chart using ApexCharts
-            if (document.getElementById("staff-chart") && typeof ApexCharts !== 'undefined') {
-                const chart = new ApexCharts(document.getElementById("staff-chart"), options);
-                chart.render();
-            }
-        });
-    </script>
+    <script defer src="{% static 'vendor/js/dashboard.js' %}"></script>
     
 </div>
 
@@ -226,74 +115,8 @@
     <h1 class='text-2xl dark:text-white text-center text-bold'> Daily Sales Chart</h1>
 </div>
     
-<script>
-    const dates = {{ dates|safe }};
-    const unitsSold = {{ units_sold|safe }};
+<script defer src="{% static 'vendor/js/dashboard.js' %}"></script>
 
-    const options = {
-        chart: {
-            type: 'line',
-            height: 350
-        },
-        series: [{
-            name: 'Units Sold',
-            data: unitsSold
-        }],
-        xaxis: {
-            categories: dates
-        }
-    };
-
-    const chart = new ApexCharts(document.querySelector("#daily-sales-chart"), options);
-    chart.render();
-</script>
-
-<script>
-    $(document).ready(function() {
-        // Function to fetch low-resource data
-        function checkResources() {
-            $.ajax({
-                url: "{% url 'check_resources' %}",
-                type: "GET",
-                dataType: "json",
-                success: function(data) {
-                    if (data.length > 0) {
-                        // Clear previous warnings
-                        $('#warning-message').empty();
-                        // Add text before the list
-                        $('#warning-message').append('<p class="font-bold mb-2">You\'re running low on the following resources:</p>');
-                        // Create a container for the list
-                        var resourceList = $('<ul>').addClass('list-none flex');
-                        // Iterate over the data and create list items for each resource
-                        data.forEach(function(resource, index) {
-                            // Add a comma before the resource name if it's not the first one
-                            var resourceName = (index > 0 ? ', ' : '') + resource.name;
-                            var listItem = $('<li>').addClass('inline-block mr-2 font-bold').text(resourceName);
-                            resourceList.append(listItem);
-                        });
-                        // Append the list to the warning message
-                        $('#warning-message').append(resourceList);
-                        // Show the warning message
-                        $('#warning-message').show();
-                    } else {
-                        // Hide the warning message if there are no low resources
-                        $('#warning-message').hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching low-resource data:", error);
-                }
-            });
-        }
-    
-        // Fetch low-resource data initially
-        checkResources();
-    
-        // Fetch low-resource data every 5 seconds
-        setInterval(checkResources, 5000); // Adjust interval as needed
-    });
-    
-</script>
 
 </div>
 <br>
