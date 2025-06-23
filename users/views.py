@@ -36,13 +36,11 @@ class SignInView(LoginView):
             elif user.role =="customer":
                 # Redirect customer to customer dashboard
                 return reverse_lazy("customer_dashboard")  # Define customer_dashboard URL
-            elif user.role =="waiter":
-                # Redirect waiter to waiter dashboard
-                return reverse_lazy("waiter_dashboard")  # Define waiter_dashboard URL
-            else:
-                # Redirect to a default page if role is not recognized
+            elif user.role =="admin":
                 messages.error(self.request, "Role not recognized! Please wait for admin to assign a role.")
                 return reverse_lazy("index")
+
+           
 
         # Default redirect to dashboard
         return reverse_lazy("dashboard")
