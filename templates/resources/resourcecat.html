@@ -1,35 +1,38 @@
-{% extends "layouts/base.html"%}
+{% extends "layouts/base.html" %}
 {% load static %}
 {% block messages %}
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{message.tags}}" role="alert">
-            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-            </svg>
-            <span class="sr-only">Info</span>
-            <div>{{ message }}</div>
-        </div>
-    {% endfor %}
-{% endif %}
-
-
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{ message.tags }}" role="alert">
+                <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <div>{{ message }}</div>
+            </div>
+        {% endfor %}
+    {% endif %}
 {% endblock messages %}
-{% block content %}
 
+{% block content %}
 <div class="container mx-auto">
-    <h1 class=" text-center text-3xl dark:text-white font-bold mb-4">Resource Categories</h1>
-    <div class="grid grid-cols-3 gap-4">
+    <h1 class="text-center text-3xl dark:text-white font-bold mb-4">Resource Categories</h1>
+
+    <!-- Add Category Form -->
+    <div class="mb-6 max-w-lg mx-auto p-4 bg-white dark:bg-gray-900 border rounded shadow">
+        <form method="POST" enctype="multipart/form-data">  {# ✅ Add enctype #}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="px-4 py-2 bg-green-600 border text-gray-950 mt-4 mx-auto border-b-gray-600 dark:text-white rounded">Add Category</button>
+</form>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {% for category in resourcecat %}
-            <div class="p-4 border rounded-lg shadow-md">
-                <a href="{% url 'resources' category.name %}" class="block">
-                <h2 class="dark:text-white text-lg font-semibold">{{ category.name }}</h2>
-                {% comment %} <img src="{{category.image.url}}", alt= "Resource cat images"> {% endcomment %}
+            <div class="p-4 border rounded-lg shadow-md dark:bg-gray-800">
+                    <h2 class="dark:text-white text-lg font-semibold">{{ category.name }}</h2>
                 </a>
             </div>
         {% endfor %}
     </div>
 </div>
-
 {% endblock %}

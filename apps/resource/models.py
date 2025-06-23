@@ -90,6 +90,12 @@ class Sales(models.Model):
     customer = models.CharField(max_length=45, null=True, default="Anonymous")
     unit_sold = models.IntegerField()
     date = models.DateTimeField(auto_now_add=True, editable=True, null=True)
+    
+    @property
+    def total_price(self):
+        if self.item.price_per_unit is not None:
+            return self.unit_sold * self.item.price_per_unit
+        return 0
 
 
 class Foodsales(models.Model):

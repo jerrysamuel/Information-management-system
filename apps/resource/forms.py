@@ -6,7 +6,7 @@ class ResourcecatForm(forms.ModelForm):
     class Meta:
         model = Resourcecategory
 
-        fields = '__all__'
+        fields = ['name']
     
 class MenucatForm(forms.ModelForm):
     class Meta:

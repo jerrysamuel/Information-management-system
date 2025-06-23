@@ -32,7 +32,7 @@ class MyAccountManager(BaseUserManager):
       
 ROLE_CHOICES = (
     ('customer'  , 'Customer'),
-    ('waiter', 'Waiter'),
+    ('admin', 'Admin'),
 )
 
 class Account(AbstractBaseUser, PermissionsMixin):

@@ -1,3 +1,4 @@
+from django.db.models import DecimalField
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -5,7 +6,7 @@ from django.contrib.auth.models import User
 from decimal import Decimal 
 from users.decorators import waiter_required, admin_required, customer_required
 from apps.resource.models import *
-from django.db.models import Sum
+from django.db.models import Sum, F, ExpressionWrapper
 import json
 from django.db.models import Count
 from django.db.models.functions import TruncDate
@@ -28,11 +29,18 @@ def starter(request):
 @login_required(login_url='/users/signin/')
 @admin_required
 def dashboard(request):
+    sales = Sales.objects.all()
     total_menu = Menuitem.objects.count()
     human_resource_count = Humanresource.objects.count()
     account_details  = Accountdetail.objects.count()
     total_salaries = Humanresource.objects.aggregate(total_salary=models.Sum('salary'))['total_salary'] or 0
     net_worth_resources = Resource.objects.aggregate(net_worth=models.Sum('worth'))['net_worth'] or 0
+    total_sales_value = sales.annotate(
+        total=ExpressionWrapper(
+            F('unit_sold') * F('item__price_per_unit'),
+            output_field=DecimalField(max_digits=12, decimal_places=2)
+        )
+    ).aggregate(total_sum=Sum('total'))['total_sum'] or 0
     category_worth = (
         Resource.objects.values('category__name')
         .annotate(total_worth=Sum('worth'))
@@ -97,6 +105,7 @@ def dashboard(request):
         'total_unit_sold_worth':total_unit_sold_worth,
         'dates': dates,
         'units_sold': units_sold,
+        'total_sales_value': total_sales_value,
     }
     
     return render(request, "dashboard/dashboard.html", context)

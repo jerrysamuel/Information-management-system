@@ -1,38 +1,72 @@
-{% extends "layouts/base.html"%}
+{% extends "layouts/base.html" %}
 {% load static %}
 {% block messages %}
-
-{% if messages %}
+  {% if messages %}
     {% for message in messages %}
-        <div class="flex items-center p-4 text-sm rounded-lg dark:bg-gray-800 {{message.tags}}" role="alert">
-            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-            </svg>
-            <span class="sr-only">Info</span>
-            <div>{{ message }}</div>
-        </div>
+      <div class="my-4 flex items-center p-4 text-sm text-white rounded-lg {{ message.tags }} 
+                  {% if message.tags == 'success' %}bg-green-600{% elif message.tags == 'error' %}bg-red-600{% else %}bg-gray-700{% endif %}" role="alert">
+        <svg class="flex-shrink-0 w-4 h-4 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+        </svg>
+        <div>{{ message }}</div>
+      </div>
     {% endfor %}
-{% endif %}
-
-
+  {% endif %}
 {% endblock messages %}
-{% block content %}
 
-<div class="container mx-auto">
-    <h1 class="text-3xl font-bold mb-4">Resources</h1>
-    <div class="grid grid-cols-3 gap-4">
-        {% for resource in resources %}
-            <div class="p-4 border rounded-lg shadow-md">
-                <h2 class="text-lg font-semibold">{{ resource.category }}</h2>
-                <p class="text-sm text-gray-600">name:{{ resource.name }}</p>
-                <p class="text-sm text-gray-600">Quantity: {{ resource.quantity }}</p>
-                <p class="text-sm text-gray-600">Description: {{ resource.description }}</p>
-                <p class="text-sm text-gray-600">weight(kg): {{ resource.weight }}</p>
-                <p class="text-sm text-gray-600">worth: {{ resource.worth }}</p>
-                <p class="text-sm text-gray-600">price_per_unit: {{ resource.price_per_unit }}</p>
-            </div>
-        {% endfor %}
-    </div>
+{% block content %}
+<div class="container mx-auto mb-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Resources</h1>
+    <button 
+      onclick="document.getElementById('addResourceForm').classList.toggle('hidden')" 
+      class="bg-green-700 text-white px-4 py-2 rounded shadow hover:bg-green-800 transition">
+      + Add New Resource
+    </button>
+  </div>
+
+  <!-- Add Resource Form -->
+  <div id="addResourceForm" class="hidden mt-4 bg-white dark:bg-gray-900 p-6 rounded shadow">
+    <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="flex flex-col">
+          <label for="{{ field.id_for_label }}" class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.errors %}
+            <p class="text-sm text-red-500">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="md:col-span-2 flex justify-end">
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+          Save Resource
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
+<div class="container mx-auto">
+  <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">All Resources</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for resource in resources %}
+      <div class="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ resource.name }}</h3>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Category: {{ resource.category }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Quantity: {{ resource.quantity }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Description: {{ resource.description }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Weight (kg): {{ resource.weight }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Worth: ₦{{ resource.worth }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Price/Unit: ₦{{ resource.price_per_unit }}</p>
+      </div>
+    {% empty %}
+      <p class="text-gray-500">No resources added yet.</p>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

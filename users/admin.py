@@ -1,8 +1,13 @@
 from django.contrib import admin
 from users.models import Profile, Account
 
-# Register your models here.
+@admin.action(description="Make selected users admin")
+def make_admin(modeladmin, request, queryset):
+    queryset.update(is_admin=True, is_staff=True, role='admin')
 
-    
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ("email", "is_admin", "is_staff", "is_active")  # adjust fields as needed
+    actions = [make_admin]
+
 admin.site.register(Profile)
-admin.site.register(Account)

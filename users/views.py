@@ -1,3 +1,4 @@
+from urllib import request
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordChangeView, PasswordResetConfirmView
@@ -38,8 +39,14 @@ class SignInView(LoginView):
             elif user.role =="waiter":
                 # Redirect waiter to waiter dashboard
                 return reverse_lazy("waiter_dashboard")  # Define waiter_dashboard URL
+            else:
+                # Redirect to a default page if role is not recognized
+                messages.error(self.request, "Role not recognized! Please wait for admin to assign a role.")
+                return reverse_lazy("index")
+
         # Default redirect to dashboard
         return reverse_lazy("dashboard")
+
 
 
 class SignUpView(CreateView):

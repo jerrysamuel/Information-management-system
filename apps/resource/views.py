@@ -5,6 +5,7 @@ from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 from users.decorators import waiter_required, admin_required, customer_required
 
 
@@ -37,11 +38,45 @@ def Menu(request, category):
 
 @login_required(login_url='/users/signin/')
 @admin_required
-def Resources(request, category):
-    category_object = get_object_or_404(Resourcecategory, name=category )
-    resources= Resource.objects.filter(category=category_object)
+def Resources(request):
+    resources = Resource.objects.all()
 
-    return render(request, "./resources/resources.html", {"resources":resources})
+    if request.method == 'POST':
+        form = ResourceForm(request.POST, request.FILES)  # include request.FILES if file uploads involved
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Resource added successfully.")
+            return redirect('resources')  # use the URL name
+        else:
+            messages.error(request, "There was an error adding the resource.")
+    else:
+        form = ResourceForm()
+
+    return render(request, "resources/resources.html", {
+        "resources": resources,
+        "form": form
+    })
+
+# def Resources(request, category):
+#     category_object = get_object_or_404(Resourcecategory, name=category)
+#     resources = Resource.objects.filter(category=category_object)
+
+#     if request.method == 'POST':
+#         form = ResourceForm(request.POST)
+#         if form.is_valid():
+#             new_resource = form.save(commit=False)
+#             new_resource.category = category_object  # override category field from URL
+#             new_resource.save()
+#             return redirect('resources', category=category)  # or your URL name
+#     else:
+#         form = ResourceForm()
+
+#     return render(request, "resources/resources.html", {
+#         "resources": resources,
+#         "form": form,
+#         "category": category_object
+#     })
+
 
 @login_required(login_url='/users/signin/')
 @admin_required
@@ -55,7 +90,28 @@ def Accountnumbers(request):
 def Resourcecat(request):
     resourcecat = Resourcecategory.objects.all()
 
-    return render(request, "./resources/resourcecat.html", {'resourcecat':resourcecat})
+    if request.method == 'POST':
+        form = ResourcecatForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                form.save()
+                messages.success(request, "Resource category added successfully.")
+                return redirect('resource_category')
+            except Exception as e:
+                print(f"Error saving form: {e}")
+                messages.error(request, "Something went wrong while saving.")
+        else:
+            print("Form errors:", form.errors)
+            messages.error(request, "Invalid form input.")
+    else:
+        form = ResourcecatForm()
+
+    return render(request, "resources/resourcecat.html", {
+        "resourcecat": resourcecat,
+        "form": form
+    })
+
+   
 @login_required(login_url='/users/signin/')
 @admin_required
 def Saleview(request):
