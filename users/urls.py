@@ -31,4 +31,5 @@ urlpatterns = [
     path('delete-user/<int:id>/', views.delete_user, name="delete_user"),
     path('update-user/<int:id>/', views.update_user, name="update_user"),
     path('user-change-password/<int:id>/', views.user_change_password, name="user_change_password"),
+    path('wait_for_role/', views.wait_for_role_assignment, name='wait_for_role'),
 ]

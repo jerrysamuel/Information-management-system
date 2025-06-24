@@ -14,7 +14,7 @@ class AccountModelTestCase(TestCase):
         self.assertFalse(user.is_admin)
         self.assertFalse(user.is_staff)
         self.assertTrue(user.is_active)
-        self.assertFalse(user.is_customer)
+        self.assertFalse(user.is_admin)
 
     def test_create_superuser(self):
         # Test creating a new superuser

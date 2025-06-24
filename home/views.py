@@ -111,15 +111,13 @@ def dashboard(request):
     return render(request, "dashboard/dashboard.html", context)
   
 @login_required(login_url='/users/signin/')
-@waiter_required
 def waiter_dashboard(request):
     return render(request, 'dashboard/waiterdash/dashboard.html')
 
 @login_required(login_url='/users/signin/')
-@customer_required
 def customer_dashboard(request):
-    
-    return render(request, 'dashboard/waiterdash/dashboard.html')
+
+    return render(request, 'dashboard/customerdash/dashboard.html')
 
 
 

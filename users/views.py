@@ -18,34 +18,31 @@ from users.utils import user_filter
 # Create your views here.
 
 def index(request):
-    pass
-    
+    return render(request, "dashboard/index.html", {
 
+    })
 
 
 class SignInView(LoginView):
     form_class = SigninForm
     template_name = "authentication/sign-in.html"
     
-    def get_success_url(self):
+    def get_success_url(self): 
         user = self.request.user
         if user.is_authenticated:
-            if user.is_admin:
-                # Redirect admin to admin dashboard
-                return reverse_lazy("admin_dashboard")  # Define admin_dashboard URL
-            elif user.role =="customer":
-                # Redirect customer to customer dashboard
-                return reverse_lazy("customer_dashboard")  # Define customer_dashboard URL
-            elif user.role =="admin":
+            if getattr(user, 'is_admin', False):
+                return reverse_lazy("admin_dashboard")
+            role = getattr(user, 'role', None)
+            if role == "customer":
+                return reverse_lazy("customer_dashboard")
+            elif role == "admin":
                 messages.error(self.request, "Role not recognized! Please wait for admin to assign a role.")
-                return reverse_lazy("index")
+                return reverse_lazy("wait_for_role")
+        else:
+            messages.error(self.request, "You must be logged in to access this page.")
+            return reverse_lazy("signin")
 
-           
-
-        # Default redirect to dashboard
         return reverse_lazy("dashboard")
-
-
 
 class SignUpView(CreateView):
     form_class = SignupForm
@@ -88,6 +85,11 @@ def profile(request):
     }
     return render(request, 'dashboard/profile.html', context)
 
+
+@login_required(login_url='/users/signin/')
+def wait_for_role_assignment(request):
+
+    return render(request, "authentication/wait_for_role.html")
 
 def upload_avatar(request):
     profile = get_object_or_404(Profile, user=request.user)

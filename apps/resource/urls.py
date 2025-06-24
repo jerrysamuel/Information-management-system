@@ -15,4 +15,5 @@ urlpatterns = [
     path('foodsales/', views.Foodsaleview, name='foodsales'),
     path('check_resources/', views.check_resources, name='check_resources'),
     
+    
 ]
