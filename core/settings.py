@@ -51,8 +51,9 @@ INTERNAL_IPS = [
 # Application definition
 
 INSTALLED_APPS = [
-    # 'allauth',
-    # 'allauth.account',
+    'allauth',
+    'allauth.account',
+
     
     'jazzmin',
     "django.contrib.humanize",
@@ -92,7 +93,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # "debug_toolbar.middleware.DebugToolbarMiddleware",
-    # "allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -118,20 +119,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "core.wsgi.application"
 
 
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DB_ENGINE   = os.getenv('DB_ENGINE'   , 'postgresql')
-DB_USERNAME = os.getenv('DB_USERNAME' , 'rmsdb_owner')
-DB_PASS     = os.getenv('DB_PASS'     , 'npg_8PgeGkRI3sTD')
-DB_HOST     = os.getenv('DB_HOST'     , 'ep-quiet-river-a63f2gl5-pooler.us-west-2.aws.neon.tech')
-DB_PORT     = os.getenv('DB_PORT'     , '5432')
-DB_NAME     = os.getenv('DB_NAME'     , 'rmsdb')
+# # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
-# DB_USERNAME = os.getenv('DB_USERNAME' , None)
-# DB_PASS     = os.getenv('DB_PASS'     , None)
-# DB_HOST     = os.getenv('DB_HOST'     , None)
-# DB_PORT     = os.getenv('DB_PORT'     , None)
-# DB_NAME     = os.getenv('DB_NAME'     , None)
+
+DB_ENGINE   = os.getenv('DB_ENGINE'   , None)
+DB_USERNAME = os.getenv('DB_USERNAME' , None)
+DB_PASS     = os.getenv('DB_PASS'     , None)
+DB_HOST     = os.getenv('DB_HOST'     , None)
+DB_PORT     = os.getenv('DB_PORT'     , None)
+DB_NAME     = os.getenv('DB_NAME'     , None)
 
 if DB_ENGINE and DB_NAME and DB_USERNAME:
     DATABASES = { 
@@ -177,12 +173,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
-    #'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     'users.backends.CaseInsensitiveModelBackend'
 )
 AUTH_USER_MODEL = 'users.Account'
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
+
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 1 
 
 LANGUAGE_CODE = "en-us"
 
@@ -235,19 +233,18 @@ CELERY_RESULT_SERIALIZER  = 'json'
 
 
 LOGIN_REDIRECT_URL = '/'
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-
-
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
-# EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
-# EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
-# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER',)
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER',)
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # ### API-GENERATOR Settings ###
 API_GENERATOR = {
@@ -266,8 +263,10 @@ REST_FRAMEWORK = {
 }
 ########################################
 
-# risky
-SESSION_COOKIE_HTTPONLY=False
+
+SESSION_COOKIE_HTTPONLY = True       
+SESSION_COOKIE_SECURE = True        
+CSRF_COOKIE_SECURE = True
 
 MESSAGE_TAGS = {
     messages.INFO: 'text-blue-800 border border-blue-300 bg-blue-50 dark:text-blue-400 dark:border-blue-800',
