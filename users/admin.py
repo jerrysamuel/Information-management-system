@@ -3,7 +3,7 @@ from users.models import Profile, Account
 
 @admin.action(description="Make selected users admin")
 def make_admin(modeladmin, request, queryset):
-    queryset.update(is_admin=True, is_staff=True, role='admin')
+    queryset.update(is_admin=True, role='admin')
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):

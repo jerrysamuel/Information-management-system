@@ -58,28 +58,23 @@
                 </a>
         </div>
 
-        <div class="mb-10">
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-    
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Net Worth of Resources</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">&#8358;{{ net_worth_resources|intcomma }}</p>
-                </a>
-        </div>
-        <div class="mb-10">
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+       
+        {% if request.user.is_staff %}
+         <div class="mb-10">
+            <a href={% url "sales_report" %} class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
     
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Sales</h5>
                 <p class="font-normal text-gray-700 dark:text-gray-400">&#8358;{{ total_sales_value|intcomma }}</p>
                 </a>
         </div>
-        {% comment %} <div class="mb-10">
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-    
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Total Available Dishes</h5>
-                <p class="font-normal text-gray-700 dark:text-gray-400">{{ total_menu|intcomma }}</p>
-                </a>
-        </div> {% endcomment %}
-    
+            <div class="mb-10">
+                <a href="{% url 'admin:index' %}" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Go to Super-Admin Dashboard</h5>
+                    <p class="font-normal text-gray-700 dark:text-gray-400">>>>>>>>>></p>
+                    </a>
+            </div> 
+        {% endif %}
         
         
         

@@ -7,6 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from users.decorators import waiter_required, admin_required, customer_required
+from django.utils import timezone
+from datetime import timedelta
+from django.core.paginator import Paginator
+
 
 
 @login_required(login_url='/users/signin/')
@@ -175,3 +179,26 @@ def leave_feedback(request, category, menuitem_name):
     else:
         form = FeedbackForm()
     return render(request, './resources/leave-feedback.html', {'form': form, 'category': category})
+
+
+def sales_report(request):
+    filter_by = request.GET.get('filter', 'monthly')  # 'monthly' or 'weekly'
+    today = timezone.now()
+
+    if filter_by == 'weekly':
+        start_date = today - timedelta(days=7)
+    else:  # default to monthly
+        start_date = today.replace(day=1)
+
+    sales_list = Sales.objects.filter(date__gte=start_date).order_by('-date')
+
+    # Pagination
+    paginator = Paginator(sales_list, 10)  # Show 10 sales per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'filter_by': filter_by,
+    }
+    return render(request, 'resources/sales_report.html', context)
